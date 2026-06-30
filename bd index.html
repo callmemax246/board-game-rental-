@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chennai Board Game Rent — Rent Board Games in Chennai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Karla:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="#top" class="brand">
+      <span class="die"><svg viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="1.8" fill="white"/><circle cx="18" cy="6" r="1.8" fill="white"/><circle cx="6" cy="18" r="1.8" fill="white"/><circle cx="18" cy="18" r="1.8" fill="white"/><circle cx="12" cy="12" r="1.8" fill="white"/></svg></span>
+      Chennai Board Game Rent
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    <nav class="main-nav" id="mainNav">
+      <a href="#top">Home</a>
+      <a href="#games">Browse Games</a>
+      <a href="#how">How It Works</a>
+      <a href="#contact">Contact</a>
+      <a href="admin.html" class="admin-link">Admin Login</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero felt" id="top">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">🎲 Chennai's Board Game Library</span>
+      <h1>Game night,<br><span>sorted.</span></h1>
+      <p class="lead">Browse our growing library of board &amp; card games, pick the ones you love, and send us a WhatsApp message — we'll handle the rest. Delivered or picked up across Chennai.</p>
+      <div class="hero-ctas">
+        <a href="#games" class="btn btn-primary">Browse Games</a>
+        <a href="#how" class="btn btn-ghost">How It Works</a>
+      </div>
+    </div>
+    <div class="dice-stack" aria-hidden="true">
+      <div class="die-face d1"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="die-face d2"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="die-face d3"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section cardboard" id="how">
+  <div class="container">
+    <div class="section-head">
+      <span class="tag">The Process</span>
+      <h2>How renting works</h2>
+      <p>Four simple steps from "let's play" to "game on."</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="num">01</div>
+        <h3>Browse &amp; pick</h3>
+        <p>Explore the catalog below and find the games that fit your group and your night.</p>
+      </div>
+      <div class="step-card">
+        <div class="num">02</div>
+        <h3>Message us</h3>
+        <p>Tap a game to send its details straight to our WhatsApp — no forms, no fuss.</p>
+      </div>
+      <div class="step-card">
+        <div class="num">03</div>
+        <h3>Confirm &amp; pay</h3>
+        <p>Our team confirms availability, rental duration and a refundable deposit.</p>
+      </div>
+      <div class="step-card">
+        <div class="num">04</div>
+        <h3>Play &amp; return</h3>
+        <p>Enjoy your games, then return or schedule a pickup once you're done playing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section felt" id="games">
+  <div class="container">
+    <div class="section-head" style="color:#f7efdc;">
+      <span class="tag" style="color:var(--gold);">The Library</span>
+      <h2 style="color:#fbf6ea;">Browse our games</h2>
+      <p style="color:#cfc4a8;">Tap any game to send its details to our team on WhatsApp.</p>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-pills" id="filterPills"></div>
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Search games...">
+      </div>
+    </div>
+
+    <div class="game-grid" id="gameGrid"></div>
+  </div>
+</section>
+
+<footer class="site-footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Chennai Board Game Rent</h4>
+        <p>Bringing game nights to your living room — rent the latest board &amp; card games, delivered across Chennai.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <div class="placeholder">Contact details coming soon.</div>
+      </div>
+      <div>
+        <h4>Socials</h4>
+        <div class="placeholder">Social links coming soon.</div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <p><a href="#games">Browse Games</a></p>
+        <p><a href="#how">How It Works</a></p>
+        <p><a href="admin.html">Admin Login</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Chennai Board Game Rent. All rights reserved.</span>
+      <span>Made for game nights, by game lovers.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+let allGames = loadGames();
+let activeCategory = 'All';
+let searchTerm = '';
+
+function categories() {
+  const set = new Set(allGames.map(g => g.category));
+  return ['All', ...Array.from(set)];
+}
+
+function renderPills() {
+  const wrap = document.getElementById('filterPills');
+  wrap.innerHTML = categories().map(c =>
+    `<button class="pill ${c === activeCategory ? 'active' : ''}" data-cat="${c}">${c}</button>`
+  ).join('');
+  wrap.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeCategory = btn.dataset.cat;
+      renderPills();
+      renderGrid();
+    });
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('gameGrid');
+  const filtered = allGames.filter(g => {
+    const matchCat = activeCategory === 'All' || g.category === activeCategory;
+    const matchSearch = g.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state">No games match your search. Try a different filter 🎲</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(g => `
+    <article class="game-tile" data-id="${g.id}">
+      <div class="thumb" style="background-image:url('${g.image}')">
+        <span class="badge ${g.available ? '' : 'unavailable'}">${g.available ? 'Available' : 'Rented Out'}</span>
+      </div>
+      <div class="body">
+        <h3>${g.name}</h3>
+        <div class="meta">
+          <span>👥 ${g.players}</span>
+          <span>⏱️ ${g.duration}</span>
+        </div>
+        <p class="desc">${g.description}</p>
+        <div class="price-row">
+          <div class="price">₹${g.price}<small> /day</small></div>
+          <button class="wa-btn" data-id="${g.id}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33C8.5 21.5 10.2 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.52-.34.7-.34h.5c.16 0 .37-.06.58.44.22.52.74 1.8.8 1.93.07.13.11.28.02.46-.09.18-.13.28-.27.43-.13.15-.28.34-.4.46-.13.13-.27.27-.12.53.16.27.7 1.16 1.5 1.88 1.04.93 1.92 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.67-.78.85-1.05.18-.27.36-.22.6-.13.25.09 1.56.74 1.83.87.27.13.45.2.51.31.07.13.07.71-.15 1.32z"/></svg>
+            Enquire
+          </button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+
+  grid.querySelectorAll('.wa-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const game = allGames.find(g => g.id === btn.dataset.id);
+      window.open(whatsappLinkFor(game), '_blank');
+    });
+  });
+
+  grid.querySelectorAll('.game-tile').forEach(tile => {
+    tile.addEventListener('click', () => {
+      const game = allGames.find(g => g.id === tile.dataset.id);
+      window.open(whatsappLinkFor(game), '_blank');
+    });
+  });
+}
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchTerm = e.target.value;
+  renderGrid();
+});
+
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('mainNav').classList.toggle('open');
+});
+
+renderPills();
+renderGrid();
+</script>
+</body>
+</html>
